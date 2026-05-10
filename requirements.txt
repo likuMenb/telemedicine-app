@@ -1,0 +1,6 @@
+# Keep this file in the SAME folder as app.py when deploying to Streamlit Community Cloud (Git repo root).
+
+streamlit>=1.32.0,<2
+supabase>=2.4.0,<3
+# Cloud often ships pandas 3.x with Python ≥3.12 — avoid "<3" or installs can conflict silently.
+pandas>=2.2.0,<4
