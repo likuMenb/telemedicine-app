@@ -2,4 +2,7 @@
 gatherUsageStats = false
 
 [theme]
+# Avoid dark-on-dark or theme glitches showing as a blank/black frame on some browsers.
+base = "light"
 primaryColor = "#0f766e"
+backgroundColor = "#ffffff"

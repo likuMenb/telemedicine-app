@@ -43,6 +43,9 @@ if _missing:
     _fatal_deps_page(f"Missing Python package(s): **{pkgs}**. Pull latest from GitHub and redeploy.")
     st.stop()
 
+# Must be first Streamlit call on Cloud (don't read st.secrets before this — it breaks the iframe).
+st.set_page_config(page_title="CareStream Tasks", layout="wide", initial_sidebar_state="expanded")
+
 
 import pandas as pd
 
@@ -54,14 +57,11 @@ except ImportError:  # pragma: no cover
 from supabase_helpers import get_supabase, normalize_project_url
 
 
-def _try_title() -> str:
+def _display_title_from_secrets() -> str:
     try:
         return str(st.secrets["default"]["app_name"]).strip()
     except Exception:
         return "CareStream Tasks"
-
-
-st.set_page_config(page_title=_try_title(), layout="wide", initial_sidebar_state="expanded")
 
 
 def sidebar_status(sb) -> None:
@@ -102,7 +102,7 @@ def sidebar_status(sb) -> None:
 
 
 def tab_home(sb) -> None:
-    st.title(_try_title())
+    st.title(_display_title_from_secrets())
     st.markdown(
         "**Tasks app** wired to Supabase: list, insert, delete rows on **`todos`**, "
         "plus SQL to create the table in one paste."
@@ -239,4 +239,8 @@ def main() -> None:
         tab_setup(sb)
 
 
-main()
+try:
+    main()
+except Exception as exc:
+    st.error("The app crashed on startup.")
+    st.exception(exc)
